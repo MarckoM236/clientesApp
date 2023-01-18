@@ -34,6 +34,12 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+//nuevo grupo de rutas
+//http://localhost:8080/api
+$routes->group('api',['namespace' => 'App\Controllers\API'],function($routes){
+	$routes->get('clientes', 'Clientes::index');
+});
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
