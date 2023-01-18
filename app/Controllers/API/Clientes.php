@@ -85,11 +85,43 @@ class Clientes extends ResourceController
            
             if($this->model->update($id,$cliente)){
                 
-                return $this->respondCreated($cliente);
+                return $this->respondUpdated($cliente);
             }
                 
             else{
                 return $this->failValidationError($this->model->validation->listErrors());
+            }
+                  
+
+        } 
+        catch (\Exception $e) {
+
+            return $this->failServerError('Ha ocurrido un error en el servidor');
+
+        }
+    }
+
+    public function delete($id=null){
+        try {
+
+            if($id==null){
+                return $this->failValidationError('No se ha pasado un ID valido');
+            }
+            
+            $clienteVerificado = $this->model->find($id);
+
+            if($clienteVerificado == null){
+                return $this->failNotFound('No se ha encontrado un cliente con el ID:'.$id);
+            }
+            
+           
+            if($this->model->delete($id)){
+                
+                return $this->respondDeleted($clienteVerificado);
+            }
+                
+            else{
+                return $this->failServerError('No se ha podido eliminar el registro');
             }
                   
 
