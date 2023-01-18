@@ -8,17 +8,18 @@ class ClienteModel extends Model{
     protected $primaryKey = 'id';
 
     protected $returnType = 'array';
-    protected $allowedFiles = ['nombre','apellido','telefono','correo']; //campos a insertar en la DB
-
+    protected $allowedFields = ['nombre','apellido','telefono','correo']; //campos a insertar en la DB
+    
     protected $useTimestamps= true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
+    
     //Validaciones
     protected $validationRules = [
         'nombre' => 'required|alpha_space|min_length[3]|max_length[75]',
         'apellido' => 'required|alpha_space|min_length[3]|max_length[75]',
-        'telefono' => 'required|alpha_number_space|min_length[8]|max_length[8]',
+        'telefono' => 'required|alpha_numeric_space|min_length[8]|max_length[8]',
         'correo' => 'permit_empty|valid_email|max_length[85]'
     ];
 

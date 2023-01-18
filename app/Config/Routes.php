@@ -38,6 +38,7 @@ $routes->get('/', 'Home::index');
 //http://localhost:8080/api
 $routes->group('api',['namespace' => 'App\Controllers\API'],function($routes){
 	$routes->get('clientes', 'Clientes::index');
+	$routes->post('clientes/create', 'Clientes::create');
 });
 
 /*
