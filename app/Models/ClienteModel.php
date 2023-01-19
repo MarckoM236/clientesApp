@@ -24,7 +24,7 @@ class ClienteModel extends Model{
     ];
 
     //Mensajes personalizados para las reglas
-    protected $validationMessage = [
+    protected $validationMessages = [
         'correo' =>[
                         'valid_email' => 'Estimado usuario, debe ingresar un email valido'
         ]

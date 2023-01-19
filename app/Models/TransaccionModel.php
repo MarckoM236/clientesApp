@@ -17,8 +17,8 @@ class TransaccionModel extends Model{
     
     //Validaciones
     protected $validationRules = [
-        'cuenta_id' => 'required',
-        'tipo_transaccion_id' => 'required',
+        'cuenta_id' => 'required|integer',
+        'tipo_transaccion_id' => 'required|integer',
         'monto' => 'required|alpha_numeric_space'
     ];
 

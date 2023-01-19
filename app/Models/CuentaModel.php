@@ -19,13 +19,13 @@ class CuentaModel extends Model{
     protected $validationRules = [
         'moneda' => 'required|alpha_space|min_length[3]|max_length[3]',
         'fondo' => 'required|alpha_numeric_space',
-        'cliente_id' => 'required|alpha_numeric_space'
+        'cliente_id' => 'required|integer|is_valid_cliente'//is_valid_cliente: regla propia
     ];
 
     //Mensajes personalizados para las reglas
-    protected $validationMessage = [
+    protected $validationMessages = [
         'cliente_id' =>[
-                        //'valid_email' => 'Estimado usuario, debe ingresar un email valido'
+                        'is_valid_cliente' => 'Debe ingresar un usuario valido'
         ]
         ];
 
