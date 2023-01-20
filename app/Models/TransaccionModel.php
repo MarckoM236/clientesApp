@@ -22,5 +22,19 @@ class TransaccionModel extends Model{
         'monto' => 'required|alpha_numeric_space'
     ];
 
+    public function TransaccionByCliente($idCliente=null){
+        $builder = $this->db->table($this->table);
+        $builder->select('cliente.nombre,cliente.apellido,cuenta.id AS NumeroCuenta');
+        $builder->select('tipo_transaccion.descripcion AS tipo, transaccion.monto, transaccion.created_at AS FechaTransaccion');
+        $builder->join('cuenta','transaccion.cuenta_id = cuenta.id');
+        $builder->join('tipo_transaccion','transaccion.tipo_transaccion_id = tipo_transaccion.id');
+        $builder->join('cliente','cuenta.cliente_id = cliente.id');
+        $builder->where('cliente.id',$idCliente);
+
+        $query = $builder->get();
+
+        return $query->getResult();
+    }
+
     
 }

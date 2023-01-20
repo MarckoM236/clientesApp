@@ -3,6 +3,8 @@
 namespace App\Controllers\API;
 
 use App\Models\TransaccionModel;
+use App\Models\CuentaModel;
+use App\Models\ClienteModel;
 use CodeIgniter\RESTful\ResourceController;
 
 
@@ -27,6 +29,7 @@ class Transacciones extends ResourceController
            
             if($this->model->insert($transaccion)){
                 $transaccion->id = $this->model->insertID();
+                $transaccion->resultado = $this->actualizarMontoCuenta($transaccion->tipo_transaccion_id,$transaccion->monto,$transaccion->cuenta_id);
                 return $this->respondCreated($transaccion);
             }
                 
@@ -84,7 +87,7 @@ class Transacciones extends ResourceController
             $transaccion= $this->request->getJSON();
            
             if($this->model->update($id,$transaccion)){
-                
+    
                 return $this->respondUpdated($transaccion);
             }
                 
@@ -122,6 +125,64 @@ class Transacciones extends ResourceController
                 
             else{
                 return $this->failServerError('No se ha podido eliminar el registro');
+            }
+                  
+
+        } 
+        catch (\Exception $e) {
+
+            return $this->failServerError('Ha ocurrido un error en el servidor');
+
+        }
+    }
+
+    public function actualizarMontoCuenta($tipoTransaccionId,$monto,$cuentaId){
+        $cuentaModel=new CuentaModel();
+        $cuenta=$cuentaModel->find($cuentaId);
+
+        switch ($tipoTransaccionId){
+            case 1:
+                $cuenta['fondo'] += $monto;
+                break;
+
+            case 2:
+                $cuenta['fondo'] -= $monto;
+                break;    
+        }
+
+        if($cuentaModel->update($cuentaId,$cuenta)){
+            return array('TransaccionExitosa'=> true,'NuevoFondo'=>$cuenta['fondo']);
+        }
+        else{
+            return array('TransaccionExitosa'=> false,'NuevoFondo'=>$cuenta['fondo']);
+        }
+    }
+
+    public function getTransaccionByCliente($idCliente=null){
+
+        try {
+            $clienteModel= new ClienteModel();
+
+            if($idCliente==null){
+                return $this->failValidationError('No se ha pasado un ID valido');
+            }
+            
+            $clienteVerificado = $clienteModel->find($idCliente);
+
+            if($clienteVerificado == null){
+                return $this->failNotFound('No se ha encontrado un Cliente con el ID:'.$idCliente);
+            }
+            
+            $transaccion= $this->model->TransaccionByCliente($idCliente);
+           
+            if(!$transaccion){
+                
+                return $this->failNotFound('No se ha encontrado una Transaccion para el cliente con el ID:'.$idCliente);
+                
+            }
+                
+            else{
+                return $this->respond($transaccion);
             }
                   
 
