@@ -37,7 +37,7 @@ $routes->post('/auth/login','Auth::login');
 
 //nuevo grupo de rutas
 //http://localhost:8080/api
-$routes->group('api',['namespace' => 'App\Controllers\API'],function($routes){
+$routes->group('api',['namespace' => 'App\Controllers\API','filter' => 'authFilter'],function($routes){
 	//Clientes
 	$routes->get('clientes', 'Clientes::index');
 	$routes->post('clientes/create', 'Clientes::create');

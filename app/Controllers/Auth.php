@@ -54,6 +54,11 @@ class Auth extends BaseController
             "uid" => base_url(),
             "iat" => 0,
             "exp" => $time + 60,
+            "data" =>[
+                "nombre"=>$usuario['nombre'],
+                "username"=>$usuario['username'],
+                "rol"=>$usuario['rol_id']
+            ]
         ];
 
         $jwt=JWT::encode($payload,$key,'HS256');
