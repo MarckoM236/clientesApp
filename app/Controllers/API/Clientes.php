@@ -4,19 +4,34 @@ namespace App\Controllers\API;
 
 use App\Models\ClienteModel;
 use CodeIgniter\RESTful\ResourceController;
+use CodeIgniter\HTTP\RequestInterface;
 
 
 class Clientes extends ResourceController
 {
     public function __construct(){
         $this->model = new ClienteModel();
+        helper('access_rol');
     }
 
 	public function index()
 	{
-		$clientes = $this->model->findAll();
+        $authHeader=$this->request->getServer('HTTP_AUTHORIZATION');
         
-        return $this->respond($clientes);
+        try {
+            if(!validateAccess(array('Administrador'),$authHeader)) {
+                return 
+                $this->failServerError('El rol no tiene acceso a este recurso');
+               }
+               $clientes = $this->model->findAll();
+        
+               return $this->respond($clientes);   
+
+        } catch (\Exception $e) {
+
+            return $this->failServerError('Ha ocurrido un error en el servidor');
+
+        }
    
 	}
 

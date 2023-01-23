@@ -10,6 +10,7 @@ use Config\Services;
 use Firebase\JWT\JWT;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\Key;
+use App\Models\RolModel;
 
 class AuthFilter implements FilterInterface{
 
@@ -28,7 +29,19 @@ class AuthFilter implements FilterInterface{
             $arr = explode(' ',$authHeader);
             $jwt = $arr[1];
             //print_r($jwt);
-            $decoded=JWT::decode($jwt, new Key($key, 'HS256'));
+            $jwtDecoded=JWT::decode($jwt, new Key($key, 'HS256'));
+
+            $rolModel = new RolModel();
+            $rol= $rolModel->find($jwtDecoded->data->rol);
+
+            if($rol == null){
+                return Services::response()->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED,'El rol del Jwt es invalido');
+            }
+            else{
+                return true;
+            }
+
+
         } catch(ExpiredException $ee){
             return Services::response()->setStatusCode(ResponseInterface::HTTP_UNAUTHORIZED,'El Token JWT ha expirado');
         } 
